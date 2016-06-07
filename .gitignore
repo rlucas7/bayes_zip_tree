@@ -26,3 +26,6 @@
 # ignore all of the mac .DS_store files 
 .DS_Store 
 *.DS_Store
+
+#ignore R history files 
+*.Rhistory
