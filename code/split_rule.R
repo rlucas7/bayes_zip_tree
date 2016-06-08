@@ -26,12 +26,25 @@ split_rule <- function(arg1=ir.tr, data_nm=ur_data){
 		stop_criteria <- sum(1*(split_factor_vals < split_val)) < length(split_factor_vals)
 		# if stop criteria == TRUE stop else, repeat 
 		if(stop_criteria == TRUE){bflag <- FALSE}
-		}else{ # factor is categorical
-			while(bflag ==TRUE){
-		len <- length(unique(as.numeric(iris$Species)))
-		sample(1:(len-1),1)
+		}
+	}else{
+			 #### =======factor is categorical
+			 ##
+			 ####=======factor is categorical
+		while(bflag ==TRUE){
+			len <- length(unique(as.numeric(iris$Species)))
+			#create binary vector for subsetting 
+			bool_vec <- matrix(0,nrow=1, ncol=len)
+			bbflag <- TRUE
+			while( bbflag == TRUE){ 
+				bool_vec <- rbinom(len, 1,0.5)
+				if(sum(bool_vec) > 0 || sum(bool_vec < len)){bbflag <- FALSE}
+				}
+		#now use the Boolean vector to subset factor levels
+		set_A <- levels(iris$Species)[as.logical(bool_vec)]
+		set_A_complement <- levels(iris$Species)[as.logical(!bool_vec)]
 		# now check if split val has obs in the two new leaf nodes
-		stop_criteria <- sum(1*(split_factor_vals < split_val)) < length(split_factor_vals)
+		stop_criteria <- sum(1*(set_A < split_val)) < length(split_factor_vals)
 		# if stop criteria == TRUE stop else, repeat 
 		if(stop_criteria == TRUE){bflag <- FALSE}	
 			
