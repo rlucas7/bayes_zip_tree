@@ -1,0 +1,8 @@
+grow.R  		the grow function from CGM.
+inter_nodes_fun.R	this gives all the nodes not given by tree term_nodes_fun function  
+misc_code.R		this is where I throw random code, duh
+prune.R 		the prune function from CGM
+split_rule.R		generates a random split rule (see CGM)
+term_node_obs_fun.R	lists all terminal node for all jobs in the tree data
+term_nodes_fun.R	lists all terminal nodes in heap numbering
+update_tree.R		function to update stats in a tree after g/p/c/s/r move
