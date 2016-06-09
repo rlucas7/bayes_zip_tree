@@ -104,11 +104,11 @@ where $\Pr(\mathcal{T}_i)$, denotes the prior measure on trees and $\Pr(\yvec \v
 The model has two main components, the tree $\mathcal{T}$ with $b$ terminal nodes, and the parameters in each terminal node $(\theta_1,\dots,\theta_b)$. 
 The two main likelihoods in each terminal node are the normal and the multinomial, for continuous and categorical responses, respectively. 
 Denote the responses in each terminal node as the vector  of vectors $Y\equiv (Y_1, \dots, Y_b)$. Then $Y_i = (y_{i1}, \dots y_{in_i})$, and the main relation is the independence breakdown 
-\begin{equation}
+\begin{equation}\label{eqn:lhood}
 f(Y\vert \mathcal{T}, X, \theta) =\prod_{i=1}^b f(Y_i\vert \mathcal{T}, X, \theta_i) = \prod_{i=1}^b \prod_{j=1}^{n_i} f(y_{ij} \vert \mathcal{T}, X, \theta_i).
 \end{equation}
 The two likelihoods are now given by
-\begin{equation}
+\begin{equation}\label{eqn:normal_tree}
 f(y_{ij} \vert \mathcal{T}, X, \theta_i) = N(\mu_i,\sigma_i),
 \end{equation}
 and the multinomial likelihood is
@@ -128,7 +128,7 @@ where $d_{\eta}$ denotes the depth of the node $\eta$ and $\alpha$, and $\beta$ 
 p_{\text{rule}}(\rho \vert \eta, \mathcal{T}) \propto \underbrace{\Pr(\text{split on covariate})}_{=(1)}\underbrace{\Pr(\text{split on a value given a covariate})}_{=(2)}. 
 \end{equation}
 
-Here CGM recommends using a uniform prior on (1), and splitting uniformly amongst the splitting values (in (2)) that do not result in an empty terminal node. While we choose the same proposal mechanism for quantity (2), the main point of this thesis is to examine and propose alternate specifications for (1). The data sets modeled in CGM \cite{chipman1998bayesian} and DMS \cite{denison1998bayesian}, and other modifications in the literature, deal with data with a small number of predictors. In this manuscript we are concerned with a response variable which is a count, which will ultimately explain how we specify quantity (1) in Equation \ref{eqn:prule}. 
+Here CGM recommends using a uniform prior on (1), and splitting uniformly amongst the splitting values (in (2)) that do not result in an empty terminal node. While we choose the same proposal mechanism for quantities (1) and  (2), the main point of this manuscript is to examine and propose alternate specifications for Equation \ref{eqn:lhood} besides the normal and multinomial likelihoods specified in Equations \ref{eqn:normal_tree} and \ref{eqn:mult_lhood} respectively. 
 
 \subsubsection{Integrated Likelihood}
 We will now focus on the integrated likelihood, which is the quantity 
@@ -158,13 +158,13 @@ To evaluate the normalization constant would require summing Equation \ref{eqn:t
 In Equation \ref{eqn:MHrule}, $q(\mathcal{T}\vert\mathcal{T}^*)$ denotes proposing a new tree $\mathcal{T}^*$, starting from the current tree $\mathcal{T}$. 
  Our proposal mechanism is as follows:
   \begin{itemize}
- \item The grow step chooses at random one of the terminal nodes and proposes to append two new child nodes with a certain probability that could depend on the tree depth, splitting on a chosen covariate.
+ \item The grow step chooses at random one of the terminal nodes and proposes to append two new child nodes with a certain probability that depends on the tree depth, as stated in Equations \ref{eqn:psplit} and \ref{eqn:prule}.
  \item The prune step works in reverse of the grow. A terminal node is selected at random and that node and the node's sibling are pruned to the immediate parent of the two child nodes.
  \item The change step randomly picks an internal node and attempts to change the split rule at the node with that of another observation, possibly on a different covariate.
   \item The swap step randomly selects an internal node that is not the root node and proposes to swap the split rules of the parent-child pair. If both child nodes' split on the same covariate, then both children and the parent node's rules are swapped.
   \item The rotate step randomly chooses a left or right rotation move. Then this step randomly chooses an admissible internal node and rotates.
  \end{itemize}
-  The rotate operation for binary trees was first introduced in Sleater and Tarjan \cite{sleator1985self} and was introduced into Bayesian decision trees in GL \cite{gramacy2008bayesian}. A good introduction and several practical uses of the rotate move can be found in Cormen, Lieserson, Rivest and Stein \cite{cormen2001introduction}. The proposal of Gramacy and Lee \cite{gramacy2008bayesian} only allows a rotate move for the specific case when a swap move is proposed and the parent child pair both split on the same covariate. We modify this and allow rotate to be a separate operation of the transition kernel and not a special swap move case. The proposal mechanism of CGM uses the grow, prune, change and swap moves only. We also allow swap moves in our proposal. In addition, neither of these papers included weights on each covariate in their examples or model specifications. They sampled each covariate and split value uniformly, at random. 
+  The rotate operation for binary trees was first introduced in Sleater and Tarjan \cite{sleator1985self} and was introduced into Bayesian decision trees in GL \cite{gramacy2008bayesian}. A good introduction and several practical uses of the rotate move can be found in Cormen, Lieserson, Rivest and Stein \cite{cormen2001introduction}. The proposal of Gramacy and Lee \cite{gramacy2008bayesian} only allows a rotate move for the specific case when a swap move is proposed and the parent child pair both split on the same covariate. We modify this and allow rotate to be a separate operation of the transition kernel and not a special swap move case. The proposal mechanism of CGM uses the grow, prune, change and swap moves only. We allow both swap moves and rotate moves in our proposal distribution.  
   
  The probability measure on the tree is defined as 
  
@@ -175,67 +175,68 @@ In Equation \ref{eqn:MHrule}, $q(\mathcal{T}\vert\mathcal{T}^*)$ denotes proposi
 The probability measure on each split, here denoted $p_{\text{split}}(\eta, \mathcal{T})$, uses Equation \ref{eqn:psplit}. Similarly the measure on each rule, here denoted $p_{\text{rule}}(\rho \vert \eta, \mathcal{T})$, uses Equation \ref{eqn:prule}. 
 All that is left to specify is the likelihood model in each node and the prior structure for the parameters in each node. This is done in the next subsection. 
 
-\subsubsection{Node Likelihoods and Priors}
+\subsection{Node Likelihoods and Priors}
 
+%
+%We begin with the Gaussian likelihood and Gaussian prior model. We define the likelihood as 
+%\begin{equation}\label{eqn:norm_lhood1}
+%N[y_{ij} \vert \mu_i, \sigma^2].
+%\end{equation}
+%Also, we define the prior for $\mu_i$ as 
+%\begin{equation}\label{eqn:norm_prior1}
+%N[\mu_i\vert \bar{\mu}, \sigma^2 ].
+%\end{equation}
+%Furthermore, we define the prior for $\sigma^2$ as 
+%\begin{equation}
+%\text{Inv-Gamma}(\sigma^2\vert \alpha, \beta).
+%\end{equation}
+%All that remains is to evaluate the integral 
+%\begin{equation}\label{eqn:int_model1}
+%\prod_{i=1}^b \int_0^\infty \int_{-\infty}^{\infty} \prod_{j=1}^{n_i} N[y_{ij} \vert \mu_i, \sigma^2]N[\mu_i\vert \bar{\mu}, \sigma^2 ]\text{Inv-Gamma}(\sigma^2\vert \nu/2, \nu\lambda/2)d\mu_id\sigma^2.
+%\end{equation}
+%For this specific prior and likelihood we can explicitly calculate the marginal likelihood. Being able to marginalize the node parameters explicitly allows us to implement a Metropolis-Hastings algorithm without resorting to complicated, specialized algorithms, or numerical integrations. Straightforward analytic manipulations yield the solution to Equation \ref{eqn:int_model1} written here in Equation \ref{eqn:int_model1_soln}
+%\begin{equation}\label{eqn:int_model1_soln}
+%\frac{ca^{b/2}}{\prod_{i=1}^b\sqrt{n_i+a}}\times \left(\sum_{i=1}^b\left(\sum_{j=1}^{n_{i}}(y_{ij}-\bar{y}_i)^2\right)+ \frac{(\bar{y}_i -\bar{\mu})^2(n_ia)}{n_i+a} \right)^{-(\nu+n)/2}.
+%\end{equation}
+%
+%Assuming instead that the variances might change from node to node, then the stated model is misspecified. Let us denote the variance in each node as $\sigma_i^2$ and keep all other notations from the stated model specification. Then the model is specified using 
+%\begin{equation}\label{eqn:normal_likelihood_many_variance}
+%N[y_{ij} \vert \mu_i, \sigma_i^2].
+%\end{equation}
+%Also, we define the prior for $\mu_i$ as 
+%\begin{equation}\label{eqn:multi_variance_prior}
+%N[\mu_i\vert \bar{\mu}, \sigma_i^2 ].
+%\end{equation}
+%Furthermore, we define the prior for the $\sigma_i^2$s as 
+%\begin{equation}\label{eqn:sigma_priors}
+%\text{Inv-Gamma}(\sigma_i^2\vert\nu/2, \nu\lambda/2)
+%\end{equation}
+% and now we evaluate the integral equation 
+% \begin{equation}\label{eqn:int_model2}
+%\prod_{i=1}^b \int_0^\infty \int_{-\infty}^{\infty} \prod_{j=1}^{n_i} N[y_{ij}\vert \vert \mu_i, \sigma_i^2]N[\mu_i\vert \bar{\mu}, \sigma_i^2 ]\text{Inv-Gamma}(\sigma_i^2\vert \nu/2, \nu\lambda/2)d\mu_id\sigma_i^2. 
+%\end{equation}
+%The result of computing the integrals in Equation \ref{eqn:int_model2} is 
+%\begin{equation}\label{eqn:int_model3}
+%\prod_{i=1}^b\pi^{n_i/2}(\lambda\nu)^{\nu/2}\sqrt{\frac{a}{n_i+a}}\frac{\Gamma((n_i+\nu)/2)}{\Gamma(\nu/2)}\times \left( \sum_{j=1}^{n_{i}}(y_{ij}-\bar{y}_i)^2+ \frac{(\bar{y}_i -\bar{\mu})^2(n_ia)}{n_i+a}+\nu\lambda  \right)^{(n_i+\nu)/2}.
+%\end{equation}
+%These are the two ``regression'' models  for Bayesian decision trees given in CGM \cite{chipman1998bayesian}. 
+%
+%The classification model discussed in CGM \cite{chipman1998bayesian} defines the likelihood, prior, and integrated likelihood as
+%\begin{equation}
+%y_{i1}, \dots, y_{in_i} \vert \mathcal{T} \sim \text{Multinomial}(Y_i \vert \vec{n}, \vec{p}),
+%\end{equation} 
+%\begin{equation}
+%\vec{p} \vert \mathcal{T} \sim \text{Dirichlet}(\vec{p}\vert \vec{\alpha}), 
+%\end{equation} 
+%and
+%\begin{equation}\label{eqn:int_model4}
+%\Pr(Y\vert \mathcal{T}, X)=\left(\frac{\Gamma(\sum_{k=1}^K\alpha_k)}{\prod_{k=1}^K\Gamma(\alpha_k)} \right)^b \prod_{i=1}^b\left( \frac{\prod_{k=1}^K\Gamma(n_{ik}+\alpha_k)}{\Gamma(n_i +\sum_{k=1}^K\alpha_k)} \right),
+%\end{equation} 
+%respectively. 
+% 
 CGM discuss three models. Two of the models use Gaussian priors and Gaussian likelihoods and one of the models uses a Dirichlet prior and a multinomial likelihood. The two Gaussian models differ in that one has a single variance and the other has a different variance for each node. As noted by Lee \cite{lee2006decision}, in a greedy optimization context, sometimes the data suggest a different model than either a Gaussian or a multinomial-Dirichlet. If the experiment suggests analyzing data using an alternate model, the Bayesian context easily handles these alterations, once the corresponding likelihood and prior are specified. In the case of Lee \cite{lee2006decision}, a zero inflated poisson (ZIP) model was proposed to analyze the solder data. Our Bayesian model can easily handle extensions such as this and also permits covariate selection, provided the integrated likelihood is available in closed form.
 
-We begin with the Gaussian likelihood and Gaussian prior model. We define the likelihood as 
-\begin{equation}\label{eqn:norm_lhood1}
-N[y_{ij} \vert \mu_i, \sigma^2].
-\end{equation}
-Also, we define the prior for $\mu_i$ as 
-\begin{equation}\label{eqn:norm_prior1}
-N[\mu_i\vert \bar{\mu}, \sigma^2 ].
-\end{equation}
-Furthermore, we define the prior for $\sigma^2$ as 
-\begin{equation}
-\text{Inv-Gamma}(\sigma^2\vert \alpha, \beta).
-\end{equation}
-All that remains is to evaluate the integral 
-\begin{equation}\label{eqn:int_model1}
-\prod_{i=1}^b \int_0^\infty \int_{-\infty}^{\infty} \prod_{j=1}^{n_i} N[y_{ij} \vert \mu_i, \sigma^2]N[\mu_i\vert \bar{\mu}, \sigma^2 ]\text{Inv-Gamma}(\sigma^2\vert \nu/2, \nu\lambda/2)d\mu_id\sigma^2.
-\end{equation}
-For this specific prior and likelihood we can explicitly calculate the marginal likelihood. Being able to marginalize the node parameters explicitly allows us to implement a Metropolis-Hastings algorithm without resorting to complicated, specialized algorithms, or numerical integrations. Straightforward analytic manipulations yield the solution to Equation \ref{eqn:int_model1} written here in Equation \ref{eqn:int_model1_soln}
-\begin{equation}\label{eqn:int_model1_soln}
-\frac{ca^{b/2}}{\prod_{i=1}^b\sqrt{n_i+a}}\times \left(\sum_{i=1}^b\left(\sum_{j=1}^{n_{i}}(y_{ij}-\bar{y}_i)^2\right)+ \frac{(\bar{y}_i -\bar{\mu})^2(n_ia)}{n_i+a} \right)^{-(\nu+n)/2}.
-\end{equation}
-
-Assuming instead that the variances might change from node to node, then the stated model is misspecified. Let us denote the variance in each node as $\sigma_i^2$ and keep all other notations from the stated model specification. Then the model is specified using 
-\begin{equation}\label{eqn:normal_likelihood_many_variance}
-N[y_{ij} \vert \mu_i, \sigma_i^2].
-\end{equation}
-Also, we define the prior for $\mu_i$ as 
-\begin{equation}\label{eqn:multi_variance_prior}
-N[\mu_i\vert \bar{\mu}, \sigma_i^2 ].
-\end{equation}
-Furthermore, we define the prior for the $\sigma_i^2$s as 
-\begin{equation}\label{eqn:sigma_priors}
-\text{Inv-Gamma}(\sigma_i^2\vert\nu/2, \nu\lambda/2)
-\end{equation}
- and now we evaluate the integral equation 
- \begin{equation}\label{eqn:int_model2}
-\prod_{i=1}^b \int_0^\infty \int_{-\infty}^{\infty} \prod_{j=1}^{n_i} N[y_{ij}\vert \vert \mu_i, \sigma_i^2]N[\mu_i\vert \bar{\mu}, \sigma_i^2 ]\text{Inv-Gamma}(\sigma_i^2\vert \nu/2, \nu\lambda/2)d\mu_id\sigma_i^2. 
-\end{equation}
-The result of computing the integrals in Equation \ref{eqn:int_model2} is 
-\begin{equation}\label{eqn:int_model3}
-\prod_{i=1}^b\pi^{n_i/2}(\lambda\nu)^{\nu/2}\sqrt{\frac{a}{n_i+a}}\frac{\Gamma((n_i+\nu)/2)}{\Gamma(\nu/2)}\times \left( \sum_{j=1}^{n_{i}}(y_{ij}-\bar{y}_i)^2+ \frac{(\bar{y}_i -\bar{\mu})^2(n_ia)}{n_i+a}+\nu\lambda  \right)^{(n_i+\nu)/2}.
-\end{equation}
-These are the two ``regression'' models  for Bayesian decision trees given in CGM \cite{chipman1998bayesian}. 
-
-The classification model discussed in CGM \cite{chipman1998bayesian} defines the likelihood, prior, and integrated likelihood as
-\begin{equation}
-y_{i1}, \dots, y_{in_i} \vert \mathcal{T} \sim \text{Multinomial}(Y_i \vert \vec{n}, \vec{p}),
-\end{equation} 
-\begin{equation}
-\vec{p} \vert \mathcal{T} \sim \text{Dirichlet}(\vec{p}\vert \vec{\alpha}), 
-\end{equation} 
-and
-\begin{equation}\label{eqn:int_model4}
-\Pr(Y\vert \mathcal{T}, X)=\left(\frac{\Gamma(\sum_{k=1}^K\alpha_k)}{\prod_{k=1}^K\Gamma(\alpha_k)} \right)^b \prod_{i=1}^b\left( \frac{\prod_{k=1}^K\Gamma(n_{ik}+\alpha_k)}{\Gamma(n_i +\sum_{k=1}^K\alpha_k)} \right),
-\end{equation} 
-respectively. 
- 
-If we wanted to model the data using a different data generating process, for example a ZIP. We could do so by specifying a different likelihood, prior, and computing the integrated likelihood. For a ZIP model this is possible using gamma priors for the rate ($\lambda$) and beta priors for zero inflation components ($\phi$). 
+If we wanted to model the data using a different data generating process, for example a ZIP. We could do so by specifying a different likelihood, prior, and computing the integrated likelihood. For a ZIP model this is possible using gamma priors for the rate ($\lambda$) parameter and beta priors for zero inflation component ($\phi$). 
  
  \subsubsection{A Bayesian Zero Inflated Poisson Model}
  %\textbf{Write out the details of this model here and cite applied statistics paper which uses a greedy approach.}
@@ -313,8 +314,22 @@ Now with the first piece simplified we move on to piece $(2)$.
 In this section we analyze the data from the soldering experiment from Chambers and Hastie \cite{chambers1991statistical}. The data contains 900 rows and 6 columns. The data was collected from an industrial experiment of manufactured circuit boards and the number of soldering defects present on the circuit boards. These data were analyzed by Lambert and were the motivating application behind the development of the zero-inflated Poisson regression model \cite{lambert1992zero}. The data are available in the R package \emph{faraway} or you may use a balanced subset of 720 observations available in the R package \emph{rpart} \cite{2015rpart}. We use the full data from the \emph{faraway} package \cite{faraway2016Rpack}. The columns in the data are:
 Opening, Solder, Mask, PadType, Panel, and skips. The skips are the response variable of interest which represent the number of skips in the soldering of the circuit board. The Panel variable is a numeric variable taking on the values 1, 2, and 3. The remaining variables are all categorical with the number of levels for each factor ranging from 2 levels to 10 levels. 
 
+\subsection{The Nematode data}
+
+Nematodes are a form of microscopic worms. While some forms of nematodes are harmless many are vectors for disease for various plant species. In particular, ring nematodes  are a vector for disease in grapevines. While nematodes are common in soil they are not ubiquitous and thus testing the soil for nematodes is an important aspect of viticulture. Moreover, a small amount of nematodes may be acceptable while the absence of nematodes is ideal. One challenge researchers often face when dealing with analyzing nematode data is the high occurrence of zero nematodes in soil samples. While this is good from the viticulturist's perspective this complicates the analysis required because this makes the use of standard, Gaussian based statistical analyses incorrect. Moreover using Gaussian based models can lead to erroneous conclusions. 
+
+An additional difficulty placed on the analyst is that the ZIP regression model is non-standard and requires interpreting two regression models, one for the zero inflation component and one for the Poisson frequency component. Often a single regression model is challenging enough to explain and two seems needlessly complex. Contrast this with a decision tree which is mostly self explanatory and needs less statistical explanation than a regression model. 
+
+We analyze data taken from field experiments conducted over several years at a vineyard in Dobson county North Carolina. While other aspects of the statistical analyses have been reported elsewhere \cite{} the analysis of the nematode data via zero-inflated models has yet to be reported. We initially built ZIP regression models but found them to be complex relative to decision trees and opted to pursue the analysis via decision trees for their easy interpretation and the subsequent increased likelihood of their being used by viticulturists. 
+
+\P describe the experiment. This \P may be lifted from one of the AJEV papers. 
+
+We analyzed the nematode data on ringworms to illustrate the use of the technique. The ultimate goal being to describe the relationship between various viticultural factors and the prevalence and/or the presence of nematodes. We compare these results with those from a Gaussian decision tree model and a ZIP regression model for comparison in Table \ref{}. 
+Table \ref{} displays the mean squared error of each model as well as the negative log-likelihood of each model. 
 
 \section{Discussion}\label{sec:discussion}
+
+
 
 \bibliographystyle{plain}   % this means that the order of references
 			    % is dtermined by the order in which the
