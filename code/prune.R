@@ -34,6 +34,7 @@ prune <- function(arg1=ir.tr){
 			bflag <- FALSE
 		}#else do nothing so loop repeats
 	}
+	
 	# now we have the terminal node to prune, select_t_node
 	parent_node <- floor(select_t_node/2)
 	row_ind_node <- match(select_t_node, node_nums)
@@ -41,8 +42,10 @@ prune <- function(arg1=ir.tr){
 	row_ind_parent <- match(parent_node, node_nums)	
 	new_tree_frame$var[row_ind_parent] <- '<leaf>'
 	arg1$frame <- new_tree_frame
-	# now update the terminal nodes to parent 
 	
+	# now update the terminal nodes to parent 
+	arg1$where[arg1$where == row_ind_node] <- row_ind_parent
+	arg1$where[arg1$where == row_ind] <- row_ind_parent
 	
 	#return the tree
 	arg1
