@@ -35,13 +35,16 @@ prune <- function(arg1=ir.tr){
 		}#else do nothing so loop repeats
 	}
 	# now we have the terminal node to prune, select_t_node
+	parent_node <- floor(select_t_node/2)
+	row_ind_node <- match(select_t_node, node_nums)
+	new_tree_frame <- arg1$frame[-c(row_ind, row_ind_node),]
+	row_ind_parent <- match(parent_node, node_nums)	
+	new_tree_frame$var[row_ind_parent] <- '<leaf>'
+	arg1$frame <- new_tree_frame
+	# now update the terminal nodes to parent 
 	
 	
-	#to prune we need to determine the two rows to remove from the tree$frame
-	# and then we need to remove and merge the remaining tables 
-	
-	# ALSO, we need to update the info in the tree$frame to reflect 
-	# the parent node is now a leaf node
-
+	#return the tree
+	arg1
 
 }
