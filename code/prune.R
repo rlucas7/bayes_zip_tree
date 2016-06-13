@@ -50,4 +50,7 @@ prune <- function(arg1=ir.tr){
 	#return the tree
 	arg1
 
+
+	#NOTE: we most likely will want to use snip.tree here
+
 }

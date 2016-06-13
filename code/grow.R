@@ -13,7 +13,7 @@ str(ir.tr)
 
 grow <- function(arg1=ir.tr, data_nm=iris){
 	
-	split_rule <- function(arg1=ir.tr, data_nm=ur_data)
+	split_rule_result <- split_rule(arg1=ir.tr, data_nm=ur_data)
 	
 	## NOW SPLIT VALUE IS THE VALUE RETURNED structure is 
 	# list -> ()
