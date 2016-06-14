@@ -58,5 +58,6 @@ change <- function(arg1=ir.tr, data_nm=iris){
 
 #simple beta test
 
-change(arg1=ir.tr, data_nm=iris)
+c1 <- change(arg1=ir.tr, data_nm=iris)
 
+p2t(c1,ir.tr)
