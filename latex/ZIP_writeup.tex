@@ -69,14 +69,12 @@ Wait until the end, when I think the draft is done to complete this section
 
 \section{Introduction}
 \label{ch:preliminaries}
-This chapter provides an overview of the decision tree models that are commonly used in theoretical and applied settings. 
 
-\textbf{1 \P on applications of count data with decision trees (motivation)}
-Numerous applications exist in the statistical literature to model count data. Perhaps the most common is the Poisson distribution, this distribution has a rate parameter that dictates the frequency of an event per unit of measurement which may be a time, area, or some other unit of measurement. The ease with which counts are collected no doubt has influenced the ubiquity of count data applications. However, one common challenge when analyzing count data is that the occurrence of zero counts may occur more frequently than the Poisson model alone would suggest. In this scenario a zero inflation component is often used to model excess of the zero count over the Poisson distribution alone \cite{cite someone}. Similar distributions, called zero-modified exist for other count distributions \cite{cite loss distributions book}. 
+Numerous applications exist in the statistical literature to model count data. Perhaps the most common distribution used to model count data is the Poisson distribution, this distribution has a rate parameter $\lambda$ that dictates the frequency of an event per unit of measurement. The unit of measurement may be a time, an area, or some other unit of measurement. The ease with which counts are collected no doubt has influenced the ubiquity of count data applications. However, one common challenge when analyzing count data is that the occurrence of zero counts may occur more frequently than the Poisson model alone would suggest. In this scenario a zero inflation component is often used to model the excess of zero count observations over the frequency predicted by the Poisson distribution alone. Similar distributions, sometimes called zero-modified exist for other count distributions \cite{cite loss distributions book}. 
 
-While these models are inherently useful often one would like to relate the frequencies obtained from these zero-inflated models to various covariates, a zero-inflated Poisson (ZIP) regression is capable of modeling this relationship \cite{cite lambert}. Since the ZIP model was first proposed \cite{}, the ZIP model has been applied to numerous applications \textbf{proceed with cite list}. However, to the authors knowledge, ZIP models have not been applied to nematodes. The ZIP model has been applied to worms in soil applications in forestry \textbf{cite gudeta sileshi} but not to nematodes and not to agricultural applications. Moreover, the ZIP model requires sophistical statistical knowledge and is not yet a common model in the repertoire of most agricultural data analysts. Contrast this with decision trees which are simple and easily understood and interpreted with minimal technical training.  For this reason we developed the zero-inflated Poisson decision tree model. A similar model was proposed by \textbf{cite lee} and was fit using a maximum likelihood approach. This work was the inspiration for our work. We approached the tree fitting process from a Bayesian perspective and arrive at different resultant decision trees but with favorable conclusions. 
+While these models are inherently useful, often one would like to relate the frequencies obtained from these zero-inflated models to various covariates. In the modeling scenario with covariates a zero-inflated Poisson (ZIP) regression is capable of modeling this relationship \cite{lambert1992zero}. Since the ZIP model was first proposed \cite{cameron1986econometric}, the ZIP model has been applied to numerous applications \textbf{proceed with cite list}. 
 
-
+In spite of the numerous applications of zero-inflated models, to the authors' knowledge, ZIP models have not been applied to nematodes. The ZIP model has been applied to worms in soil applications in forestry \cite{sileshi2006selecting} but not to nematodes and not to agricultural applications. Moreover, the ZIP model requires sophistical statistical knowledge and is not yet a common model in the repertoire of most agricultural data analysts. Contrast this with decision trees which are simple, easily understood, and interpreted with minimal technical training. For all these reasons we developed the zero-inflated Poisson decision tree model. A similar ZIP decision tree model was proposed by \cite{lee2006decision} and was fit using a maximum likelihood approach. This work was the inspiration for our work. In contrast with the maximum likelihood fitting approach, we fit the decision trees with a Bayesian method and arrive at different resultant decision trees but with favorable conclusions. 
 
 Bayesian approaches to building decision trees were not possible until advances in computing power and advances in sampling based approaches became available \cite{gelfand1990sampling}. While the work of Breiman et al \cite{breiman1984classification} always contained a Bayesian flavor, no probability measure over trees was ever proposed. That is until the groundbreaking works of Denison, Mallick, and Smith \cite{denison1998bayesian} and Chipman, George, and Mcculloch \cite{chipman1998bayesian}.
 
@@ -84,7 +82,7 @@ This manuscript proceeds as follows:
 
 Section \ref{sec:derivations} contains the derivations for the marginal likelihoods of the zero-inflated decision trees. 
 Section \ref{sec:simulations} displays the results from simulate data. 
-Section \ref{sec:twocasestudies} presents two case studies, one using the solder data from \textbf{? find the ref}  \cite{}  and the second uses data collected from a study of nematodes in a vineyard in Dobson county North Carolina. 
+Section \ref{sec:twocasestudies} presents two case studies, one using the solder data from Chambers and Hastie \cite{chambers1991statistical}  and the second uses data collected from a study of nematodes in a vineyard in Dobson county North Carolina. 
 Section \ref{sec:discussion} puts the findings in context with other research, summarizes the results, and points towards future research. 
 
 \section{The Model Details}
@@ -244,7 +242,7 @@ If we wanted to model the data using a different data generating process, for ex
  \subsubsection{A Bayesian Zero Inflated Poisson Model}
  %\textbf{Write out the details of this model here and cite applied statistics paper which uses a greedy approach.}
  
- Lee and Jin \cite{lee2006decision} reconsidered impurity functions in light of the connection to likelihood functions. Lee and Jin \cite{lee2006decision} proposed to use likelihood functions instead of impurity functions that model the data generating process. Towards this end they considered the soldering data from Chambers and Hastie \cite{chambers1992statistical}. The response of interest in this case is a collection of counts on manufactured circuit boards. This response has many zero's and Lee and Jin \cite{lee2006decision} propose using a zero inflated (ZIP) poisson likelihood to model the measured counts. Lee and Jin \cite{lee2006decision} optimized using a greedy algorithm and they found the fit and holdout prediction to be better using the ZIP model in each terminal node. If we are to use a Bayesian approach to this problem we need to define the likelihood, the prior, and the integrated likelihood. We now define these three quantities.
+ Lee and Jin \cite{lee2006decision} reconsidered impurity functions in light of the connection to likelihood functions. Lee and Jin \cite{lee2006decision} proposed to use likelihood functions instead of impurity functions that model the data generating process. Towards this end they considered the soldering data from Chambers and Hastie \cite{chambers1991statistical}. The response of interest in this case is a collection of counts on manufactured circuit boards. This response has many zero's and Lee and Jin \cite{lee2006decision} propose using a zero inflated (ZIP) poisson likelihood to model the measured counts. Lee and Jin \cite{lee2006decision} optimized using a greedy algorithm and they found the fit and holdout prediction to be better using the ZIP model in each terminal node. If we are to use a Bayesian approach to this problem we need to define the likelihood, the prior, and the integrated likelihood. We now define these three quantities.
  
  The likelihood for a single observation is 
  \begin{equation}
@@ -306,6 +304,8 @@ Now with the first piece simplified we move on to piece $(2)$.
  \end{align*}
  
  And the result is shown. 
+ 
+ It is worth noting that for datasets where there are a large number of zero observations, denoted $n_0$ in the derivations above, it may become computationally infeasible to evaluate the sum formulae in the derivations above. 
 
 \section{Simulations}
 \label{sec:simulations}
@@ -337,6 +337,6 @@ Table \ref{} displays the mean squared error of each model as well as the negati
 \bibliographystyle{plain}   % this means that the order of references
 			    % is dtermined by the order in which the
 			    % \cite and \nocite commands appear
-\bibliography{tree_biblio, tree_biblio1} 
+\bibliography{tree_biblio} 
 
 \end{document}

@@ -46,7 +46,7 @@ swap <- function(arg1=ir.tr){
 	if(joint_swap_logic){
 		
 		#both split rules are the same so swap both with parent
-		
+		 swap_tree <- joint_swap()
 		
 		
 		
