@@ -52,27 +52,39 @@ swap <- function(arg1=ir.tr){
 		
 	}else{
 		#both split rules aren't the same, only swap with one child (which?)
-		rc_logic <- arg1$frame$var[rc_row] =='<leaf>'
-		lc_logic <- arg1$frame$var[lc_row] =='<leaf>'		
-		if(!rc_logic && !lc_logic){ 
+		rc_logic <- arg1$frame$var[rc_row] !='<leaf>'
+		lc_logic <- arg1$frame$var[lc_row] !='<leaf>'		
+		if(rc_logic && lc_logic){ 
 			rbin<-rbinom(1,1,0.5) 
 			if(rbin==0){ 
 				#randomly choose the left node 
-				
+				swap_tree <- swap_node(arg1,node_num left_right='left')
 				}else{
 				# randomly choose right node	
-				
+				swap_tree <- swap_node(arg1,node_num left_right='right')
+
 				}
 			
 			}else{
 				# in this case only one of the two child nodes is non-terminal so choose that one
-			
+				if(lc_logic){
+					swap_tree <- swap_node(arg1,node_num left_right='left')
+
+				}else{
+					swap_tree <- swap_node(arg1,node_num left_right='right')
+
+				}
 				
-			}
+			}# end of swapping w/different or only a single child split rule
 		
 		
 		
 	}# end of ifelse(joint_swap_logic)
 
+	#### NOW WE WANT TO UPDATE THE OBJECTS TERMINAL NODES (OBJECT$WHERE LIST) 
+	
+	#### AS WELL AS THE STATISTICS INSIDE THE ()OBJECT$FRAME)
 
+	### return the swappped tree :) 
+	arg1
 }# end of function
