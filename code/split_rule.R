@@ -16,8 +16,8 @@ split_rule <- function(arg1=ir.tr, data_nm=ur_data){
 	subset_data <- factor_data[tnode_obs == selected_node,]
 	#select the splitting factor
 	column <- sample(1:length(factors),1)
-	split_factor_vals <- subset_data[,column]
-	### code differs if the are categorical vs numeric
+	split_factor_vals <- subset_data[column]
+	### code differs if they are categorical vs numeric
 	bflag <- TRUE
 	if(is.numeric(split_factor_vals)){		
 		while(bflag ==TRUE){
