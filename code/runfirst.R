@@ -8,3 +8,7 @@ source(file="split_rule.R")
 source(file="inter_nodes_fun.R")
 
 source(file="two_tree_plot.R")
+
+source(file="prune.R")
+
+source(file="grow.R")
