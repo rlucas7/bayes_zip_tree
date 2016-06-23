@@ -16,7 +16,7 @@ prune <- function(arg1=ir.tr){
 	
 		# now check if t_node's sibling is also terminal 
 		# if not then we need to look at another node...
-		node_nums <- as.numeric(rownames(ir.tr$frame))
+		node_nums <- as.numeric(rownames(arg1$frame))
 	
 		if(select_t_node %% 2 == 0){ 
 			# this is executed if node is left child	
@@ -28,7 +28,7 @@ prune <- function(arg1=ir.tr){
 		
 			#check if sibling (right) node is leaf
 			row_ind <- match(sibling_node_num, node_nums)
-			sibling_leaf_ind <- ir.tr$frame[row_ind,1] =='<leaf>'
+			sibling_leaf_ind <- arg1$frame[row_ind,1] =='<leaf>'
 		if(sibling_leaf_ind){
 			# proceed with pruning
 			bflag <- FALSE
