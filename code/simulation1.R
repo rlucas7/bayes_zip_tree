@@ -81,7 +81,7 @@ text(init_tree)
 
 ### sample the decision trees 
 
-for(i in 1:m){
+for(i in 2:m){
 	
 	propose_choice <- sample(1:2, 1)
 	if(propose_choice == 1){ 
@@ -101,20 +101,20 @@ print(proposed_tree)
 	### need a function that takes in grow/prune and gives the llhood `correct' terms
 	
 	### 
-	 # log_ratio <- llhood[i-1] - prop_llhood
-	
+	  log_ratio <- llhood[i-1] - prop_llhood
+	print(log_ratio)	
 	# #### if/else criteria for stay or go in MCMC 
-	# if(-rexp(1) > log_ratio ){
+	if(-rexp(1) > log_ratio ){
 		# # go! 
-		# llhood[i] <- prop_llhood
-		# samp_tree_list[i] <- proposed_tree
-		# stay_or_go[i] <- 0
-	# }else{
-		# #stay!
-		# llhood[i] <- llhood[i]		
-		# samp_tree_list[i] <- samp_tree_list[i-1]
-		# stay_or_go[i] <- 1
-	# }
+		 llhood[i] <- prop_llhood
+		 samp_tree_list[[i]] <- proposed_tree
+		 stay_or_go[i] <- 0
+	}else{
+		 #stay!
+		 llhood[i] <- llhood[i]		
+		 samp_tree_list[[i]] <- samp_tree_list[[i-1]]
+		 stay_or_go[i] <- 1
+	 }
 
 }# end of for(i in 1:m){} loop
 
