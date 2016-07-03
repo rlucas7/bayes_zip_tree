@@ -307,6 +307,12 @@ Now with the first piece simplified we move on to piece $(2)$.
  
  It is worth noting that for datasets where there are a large number of zero observations, denoted $n_0$ in the derivations above, it may become computationally infeasible to evaluate the sum formulae in the derivations above. 
 
+For the simulations that we run in this paper we specialize the formulae given here to $\alpha=\beta=\alpha_{\lambda}=\beta_{\lambda}$. Putting these values for the hyper parameters into the formula and after some simplification we find that formula \ref{eqn:zip_int_lhood} above specializes to 
+
+\begin{equation}
+\frac{\Gamma(1+n_+\bar{y}_+)(n_+ + 1)^{1+n_+\bar{y}_+}}{\prod_{j=1}^{n_+}y_j!} + n_0/2  + 1.
+\end{equation}
+
 \section{Simulations}
 \label{sec:simulations}
 
